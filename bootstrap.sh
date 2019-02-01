@@ -105,4 +105,4 @@ net.bridge.bridge-nf-call-iptables = 1
 EOF
 sysctl --system
 
-kubeadm config images pull
+kubeadm config images pull --kubernetes-version v1.13.2
