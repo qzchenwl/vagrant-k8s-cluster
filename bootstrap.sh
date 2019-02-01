@@ -37,9 +37,10 @@ yum install -y yum-utils device-mapper-persistent-data lvm2
 
 ### Add docker repository.
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum makecache
 
 ## Install docker ce.
-yum update && yum -y install docker-ce-18.09.1.ce
+yum install -y docker-ce-18.06.1.ce
 
 ## Create /etc/docker directory.
 mkdir /etc/docker
