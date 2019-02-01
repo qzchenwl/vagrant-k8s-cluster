@@ -65,6 +65,7 @@ mkdir -p /etc/systemd/system/docker.service.d
 # Restart docker.
 systemctl daemon-reload
 systemctl restart docker
+systemctl enable docker
 
 ### check docker
 docker run hello-world
