@@ -36,15 +36,15 @@ sed -i '/swap/s/^/#/' /etc/fstab
 yum install -y yum-utils device-mapper-persistent-data lvm2
 
 ### Add docker repository.
-yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-yum makecache
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-## install the *right* version
-yum install -y docker-ce-18.06.1.ce
+## Install docker ce.
+yum update && yum -y install docker-ce-18.09.1.ce
 
-### config docker
+## Create /etc/docker directory.
 mkdir /etc/docker
 
+# Setup daemon.
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
@@ -58,15 +58,12 @@ cat > /etc/docker/daemon.json <<EOF
   ]
 }
 EOF
-# docker repository mirror
-#,"registry-mirrors": ["https://registry.docker-cn.com"]
 
 mkdir -p /etc/systemd/system/docker.service.d
 
-### restart docker
+# Restart docker.
 systemctl daemon-reload
 systemctl restart docker
-systemctl enable docker
 
 ### check docker
 docker run hello-world
@@ -80,22 +77,20 @@ docker run hello-world
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
 enabled=1
 gpgcheck=1
 repo_gpgcheck=1
-gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kube*
 EOF
 
-## disable SELinux
+# Set SELinux in permissive mode (effectively disabling it)
 setenforce 0
 sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
-## install
 yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 
-## start
 systemctl enable --now kubelet
 
 ## network issue
