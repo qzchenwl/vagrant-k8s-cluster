@@ -22,7 +22,7 @@ When `vagrant up` succeeded, `kubecfg.p12` and `admin-user-token.txt` can be fou
 
 Before visiting the dashboard through [api-server](https://10.0.0.101:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/), do the following steps:
 1. Trust certificate `output/kubecfg.p12`, which has password `123456`.
-   1. Open `output/kubecfg.p12`
+   1. Double click `output/kubecfg.p12`
       ![open-kubecfg-p12](images/open-kubecfg-p12.png)
    2. Trust *kubernetes-admin* certificate
       ![trust-kubecfg-cert](images/trust-kubecfg-cert.png)
