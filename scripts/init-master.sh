@@ -11,11 +11,13 @@ sudo chown "$(id -u):$(id -g)" /home/vagrant/.kube/config
 
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
 kubectl apply -f "https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml"
+kubectl apply -f /vagrant/yaml/admin-user.yaml
 
+kubectl -n kube-system describe secret "$(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')" > "$OUTPUT/admin-user-token.txt"
 grep 'client-certificate-data' ~/.kube/config | head -n 1 | awk '{print $2}' | base64 -d > "$OUTPUT/kubecfg.crt"
 grep 'client-key-data' ~/.kube/config | head -n 1 | awk '{print $2}' | base64 -d > "$OUTPUT/kubecfg.key"
-openssl pkcs12 -export -clcerts -inkey "$OUTPUT/kubecfg.key" -in "$OUTPUT/kubecfg.crt" -out "$OUTPUT/kubecfg.p12" -name "kubernetes-client" -password "pass:"
-echo "Browser import certificate file kubecfg.p12"
+openssl pkcs12 -export -clcerts -inkey "$OUTPUT/kubecfg.key" -in "$OUTPUT/kubecfg.crt" -out "$OUTPUT/kubecfg.p12" -name "kubernetes-client" -password "pass:123456"
+echo "Browser import certificate file output/kubecfg.p12"
 echo " then visit url: https://10.0.0.101:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/"
 
 kubeadm token list | head -2 | tail -1 | cut -d" " -f1 > "$OUTPUT/token.txt"
