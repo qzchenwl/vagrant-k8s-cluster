@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
     $num_nodes = 3
     (1..$num_nodes).each do |i|
-        config.vm.define "k8s-cluster-node#{i}" do |node|
+        config.vm.define "k8s-node#{i}" do |node|
             node.vm.box = "qzchenwl/centos"
             node.vm.synced_folder ".", "/vagrant", type: "virtualbox"
             node.vm.hostname = "k8s-node#{i}"
@@ -13,15 +13,15 @@ Vagrant.configure("2") do |config|
             node.vm.provider "virtualbox" do |vb|
                 vb.memory = "3072"
                 vb.cpus = 2
-                vb.name = "k8s-cluster-node#{i}"
+                vb.name = "k8s-node#{i}"
             end
 
             node.vm.provision "shell", path: "scripts/bootstrap.sh"
             if i == 1
-                puts "k8s-cluster-node#{i} is master"
+                puts "k8s-node#{i} is master"
                 node.vm.provision "shell", path: "scripts/init-master.sh", privileged: false
             else
-                puts "k8s-cluster-node#{i} is worker"
+                puts "k8s-node#{i} is worker"
                 node.vm.provision "shell", path: "scripts/init-worker.sh", privileged: false
             end
         end
