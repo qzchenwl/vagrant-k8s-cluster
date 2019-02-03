@@ -1,6 +1,6 @@
 # vagrant-k8s-cluster
 
-Vagrantfile for k8s cluster of 3 node.
+Vagrantfile for k8s cluster of 3 nodes.
 
 ## Prerequisite
 
