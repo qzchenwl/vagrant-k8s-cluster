@@ -1,0 +1,16 @@
+hub:
+  db:
+    type: sqlite-memory
+
+proxy:
+  secretToken: "2ff98bb089a77b7a9a6d56d8c27b81bd3706337e0f6f914d5e3955c3d391440e"
+  https:
+    enabled: false
+  service:
+    type: NodePort
+    nodePorts:
+      http: 30080
+
+singleuser:
+  storage:
+    type: none

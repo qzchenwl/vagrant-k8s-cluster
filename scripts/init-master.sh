@@ -23,3 +23,14 @@ echo " then visit url: https://10.0.0.101:6443/api/v1/namespaces/kube-system/ser
 kubeadm token list | head -2 | tail -1 | cut -d" " -f1 > "$OUTPUT/token.txt"
 openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed -e 's/^.* //' > "$OUTPUT/ca-cert-hash.txt"
 
+# Install helm
+curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+kubectl --namespace kube-system create serviceaccount tiller
+kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
+helm init --service-account tiller --wait
+helm version
+
+# Install jupyterhub
+helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+helm repo update
+helm upgrade --install jhub jupyterhub/jupyterhub --namespace jhub --version=0.8.0-beta.1 --values /vagrant/yaml/z2jh-config.yaml
