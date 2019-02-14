@@ -3,7 +3,7 @@ set -xe
 
 OUTPUT="/vagrant/output"
 
-sudo kubeadm init --pod-network-cidr=10.0.0.0/24 --apiserver-advertise-address=10.0.0.101 --kubernetes-version v1.13.2
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.0.0.101 --kubernetes-version v1.13.2
 
 mkdir -pv "$HOME/.kube"
 sudo cp -i /etc/kubernetes/admin.conf "$HOME/.kube/config"
